@@ -5,7 +5,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon src/index.ts"
+    "start": "nodemon src/index.ts",
+    "dev": "yarn start"
   },
   "dependencies": {
     "apollo-server": "^3.13.0",
