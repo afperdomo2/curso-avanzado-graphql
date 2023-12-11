@@ -1,4 +1,4 @@
-import type { Attributes, Avocado, PrismaClient } from '@prisma/client'
+import type { Attributes, Avocado, PrismaClient, Prisma } from '@prisma/client'
 
 type ResolverContext = {
   prisma: PrismaClient
@@ -6,10 +6,15 @@ type ResolverContext = {
 
 export function findAll(
   parent: unknown,
-  arg: unknown,
+  arg: { skip?: number; take?: number; where: Prisma.AvocadoWhereInput },
   context: ResolverContext
 ): Promise<Avocado[]> {
-  return context.prisma.avocado.findMany({ include: { attributes: true } })
+  return context.prisma.avocado.findMany({
+    skip: arg.skip,
+    take: arg.take,
+    where: arg.where,
+    include: { attributes: true },
+  })
 }
 
 export function findOne(
