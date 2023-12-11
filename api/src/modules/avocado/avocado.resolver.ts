@@ -1,6 +1,4 @@
-import { createHash } from 'crypto'
-import { baseModelResolver } from '../base/base.resolver'
-import type { Avocado, Attributes, PrismaClient } from '@prisma/client'
+import type { Attributes, Avocado, PrismaClient } from '@prisma/client'
 
 type ResolverContext = {
   prisma: PrismaClient
@@ -38,33 +36,26 @@ export const resolver: Record<
   }),
 }
 
-// export function createAvo(
-//   parent: unknown,
-//   {
-//     data,
-//   }: { data: Pick<Avocado, 'name' | 'price' | 'image'> & Avocado['attributes'] }
-// ): Avocado {
-//   const currentLength = avos.length
-//   const newAvo: Avocado = {
-//     id: String(currentLength + 1),
-//     sku: createHash('sha256')
-//       .update(data.name, 'utf8')
-//       .digest('base64')
-//       .slice(-6),
-//     createdAt: new Date(),
-//     updatedAt: new Date(),
-//     deletedAt: undefined,
-//     name: data.name,
-//     price: data.price,
-//     image: data.image,
-//     attributes: {
-//       description: data.description,
-//       shape: data.shape,
-//       hardiness: data.hardiness,
-//       taste: data.taste,
-//     },
-//   }
+export function createAvo(
+  parent: unknown,
+  { data }: { data: Pick<Avocado, 'name' | 'price' | 'image'> & Attributes },
+  context: ResolverContext
+): Promise<Avocado> {
+  console.log('data:', data)
+  const { name, price, image, ...attributes } = data
 
-//   avos.push(newAvo)
-//   return newAvo
-// }
+  return context.prisma.avocado.create({
+    data: {
+      name,
+      price,
+      image,
+      sku: new Date().getTime().toString(),
+      attributes: {
+        create: {
+          ...attributes,
+        },
+      },
+    },
+    include: { attributes: true },
+  })
+}
