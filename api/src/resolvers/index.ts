@@ -5,6 +5,7 @@ export default {
   ...scalars,
   Query: {
     avos: avo.findAll,
+    avo: avo.findOne,
   },
   Mutation: {
     createAvo: avo.createAvo,

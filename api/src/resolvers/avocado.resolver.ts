@@ -9,12 +9,19 @@ export function findAll(
   arg: unknown,
   context: ResolverContext
 ): Promise<Avocado[]> {
-  return context.prisma.avocado.findMany()
+  return context.prisma.avocado.findMany({ include: { attributes: true } })
 }
 
-// export function findOne(id: string): Avocado | null {
-//   return avos[0]
-// }
+export function findOne(
+  parent: unknown,
+  args: { id: string },
+  context: ResolverContext
+): Promise<Avocado | null> {
+  return context.prisma.avocado.findUnique({
+    where: { id: parseInt(args.id, 10) },
+    include: { attributes: true },
+  })
+}
 
 export const resolver: Record<
   keyof Avocado & { attributes: Attributes },
