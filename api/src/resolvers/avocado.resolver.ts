@@ -41,7 +41,6 @@ export function createAvo(
   { data }: { data: Pick<Avocado, 'name' | 'price' | 'image'> & Attributes },
   context: ResolverContext
 ): Promise<Avocado> {
-  console.log('data:', data)
   const { name, price, image, ...attributes } = data
 
   return context.prisma.avocado.create({
